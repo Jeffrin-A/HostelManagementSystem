@@ -131,7 +131,7 @@ public class UserInterface {
                         String studentId = (scanner.nextLine());
                         boolean check = login.checkIfStudent(studentId, studentDatabase);
                         if (!check) {
-                            System.out.println("Register first");
+                            System.out.println("Register first and then");
                             break;
                         }
                         studentDatabase.printStudent(studentId);

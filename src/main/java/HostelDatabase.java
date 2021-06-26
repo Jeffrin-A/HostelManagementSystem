@@ -1,8 +1,8 @@
 import java.util.ArrayList;
+import java.util.Set;
 
 public class HostelDatabase {
     private final ArrayList<Hostel> hostelList;
-
     public HostelDatabase() {
         hostelList = new ArrayList<>();
     }
