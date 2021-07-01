@@ -1,11 +1,13 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class StudentDatabase {
-    private final ArrayList<Student> studentList;
+    private final Set<Student> studentList;
 
     public StudentDatabase() {
-        studentList = new ArrayList<>();
+        studentList = new HashSet<>();
     }
 
     public boolean isStudent(String studentId) {
@@ -17,19 +19,14 @@ public class StudentDatabase {
     }
 
     public boolean addStudent(Student student) {
-        if (!(studentList.contains(student))) {
-            studentList.add(student);
-            return true;
-        }
-        return false;
+        return studentList.add(student);
     }
 
     public boolean removeStudent(String studentId) {
 
         for (Student student : studentList) {
             if (student.getStudentId().equals(studentId)) {
-                studentList.remove(student);
-                return true;
+                return studentList.remove(student);
             }
         }
         return false;
@@ -64,6 +61,7 @@ public class StudentDatabase {
                 System.out.println("Phone No: " + student.getPhoneNo());
                 System.out.println("Father Name: " + student.getFatherName());
                 System.out.println("Father Phone No: " + student.getFatherPhoneNo());
+                System.out.println("Hostel ID: " + student.getHostelId());
                 System.out.println("Hostel Name: " + student.getHostelName());
                 System.out.println("Room Number: " + student.getRoomNumber());
             }

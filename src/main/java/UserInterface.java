@@ -1,4 +1,3 @@
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -41,7 +40,7 @@ public class UserInterface {
                     System.out.println("6-View All Hostels");
                     System.out.println("7-View Student");
                     System.out.println("8-View All Students");
-                    System.out.println("9-Exit");
+                    System.out.println("9-Log Out");
                     System.out.print("Choice: ");
                     int actionAdmin = Integer.parseInt(scanner.nextLine());
                     if (actionAdmin == 1) {
@@ -58,20 +57,30 @@ public class UserInterface {
                         System.out.print("Warden PhoneNo: ");
                         String wardenPhoneNo = scanner.nextLine();
                         Hostel hostel = new Hostel(hostelId, hostelName, typeOfHostel, yearOfHostel, wardenName, wardenPhoneNo);
-                        hostelDatabase.addHostel(hostel);
+                        boolean success=hostelDatabase.addHostel(hostel);
+                        if(success)
+                            System.out.println("Hostel added successfully");
+                        else
+                            System.out.println("Hostel couldn't be added");
                     } else if (actionAdmin == 2) {
                         System.out.print("Hostel Id: ");
                         String hostelId = scanner.nextLine();
+                        System.out.print("Hostel Name: ");
+                        String hostelName = scanner.nextLine();
                         System.out.print("Room number: ");
                         int roomNumber = Integer.parseInt(scanner.nextLine());
                         System.out.print("No of Beds: ");
                         int noOfBeds = Integer.parseInt(scanner.nextLine());
-                        Room room = new Room(hostelId, roomNumber, noOfBeds);
-                        hostelDatabase.addRoom(hostelId, room);
+                        Room room = new Room(hostelId, hostelName, roomNumber, noOfBeds);
+                        boolean success= hostelDatabase.addRoom(hostelId, room);
+                        if(success)
+                            System.out.println("Room added successfully");
+                        else
+                            System.out.println("Room couldn't be added");
                     } else if (actionAdmin == 3) {
                         System.out.println("Students to be approved:-");
                         studentDatabase.printNonAllocated();
-                        System.out.println("Student IDs to be approved:-");
+                        System.out.println("Enter Student IDs to be approved:-");
                         while (true) {
                             String id = scanner.nextLine();
                             if (id.equals(""))
@@ -79,20 +88,19 @@ public class UserInterface {
                             Student student = studentDatabase.find(id);
                             hostelDatabase.addStudent(student);
                         }
-
                     } else if (actionAdmin == 4) {
-                        System.out.println("Student Id: ");
+                        System.out.print("Student Id: ");
                         String id = scanner.nextLine();
                         Student student = studentDatabase.find(id);
                         hostelDatabase.removeStudent(student);
                     } else if (actionAdmin == 5) {
-                        System.out.println("Hostel ID: ");
+                        System.out.print("Hostel ID: ");
                         String hostelId = scanner.nextLine();
                         hostelDatabase.printHostelDetails(hostelId);
                     } else if (actionAdmin == 6) {
                         hostelDatabase.printHostelsDetails();
                     } else if (actionAdmin == 7) {
-                        System.out.println("Student ID: ");
+                        System.out.print("Student ID: ");
                         String studentId = scanner.nextLine();
                         studentDatabase.printStudent(studentId);
                     } else if (actionAdmin == 8) {
@@ -131,7 +139,7 @@ public class UserInterface {
                         String studentId = (scanner.nextLine());
                         boolean check = login.checkIfStudent(studentId, studentDatabase);
                         if (!check) {
-                            System.out.println("Register first and then");
+                            System.out.println("Register first and then login");
                             break;
                         }
                         studentDatabase.printStudent(studentId);

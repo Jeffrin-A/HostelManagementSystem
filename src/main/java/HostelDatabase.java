@@ -1,25 +1,25 @@
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class HostelDatabase {
-    private final ArrayList<Hostel> hostelList;
+    private final Set<Hostel> hostelList;
+
     public HostelDatabase() {
-        hostelList = new ArrayList<>();
+        hostelList = new HashSet<>();
     }
 
-    public boolean addHostel(Hostel hostel) {
-        if (!(hostelList.contains(hostel))) {
-            hostelList.add(hostel);
-            return true;
+    public boolean addHostel(Hostel hostelToAdd) {
+        for (Hostel hostel : hostelList) {
+            if (hostel.getHostelId().equals(hostelToAdd.getHostelId()))
+                return false;
         }
-        return false;
+        return hostelList.add(hostelToAdd);
     }
 
     public boolean removeHostel(String hostelId) {
         for (Hostel hostel : hostelList) {
             if (hostel.getHostelId().equals(hostelId)) {
-                hostelList.remove(hostel);
-                return true;
+                return hostelList.remove(hostel);
             }
         }
         return false;
@@ -27,10 +27,8 @@ public class HostelDatabase {
 
     public boolean addRoom(String hostelId, Room room) {
         for (Hostel hostel : hostelList) {
-            if (hostel.getHostelId().equals(hostelId)) {
-                hostel.addRoom(room);
-                return true;
-            }
+            if (hostel.getHostelId().equals(hostelId))
+                return hostel.addRoom(room);
         }
         return false;
     }
@@ -38,8 +36,7 @@ public class HostelDatabase {
     public boolean removeRoom(String hostelId, int roomNo) {
         for (Hostel hostel : hostelList) {
             if (hostel.getHostelId().equals(hostelId)) {
-                hostel.removeRoom(roomNo);
-                return true;
+               return hostel.removeRoom(roomNo);
             }
         }
         return false;
@@ -47,20 +44,17 @@ public class HostelDatabase {
 
     public boolean addStudent(Student student) {
         for (Hostel hostel : hostelList) {
-            if (hostel.getTypeOfHostel().equals(student.getSex()) && hostel.getYearOfHostel() == student.getYear()) {
-                hostel.allocate(student);
-                return true;
+            if (hostel.getTypeOfHostel().equalsIgnoreCase(student.getSex()) && hostel.getYearOfHostel() == student.getYear()) {
+                return hostel.allocate(student);
             }
         }
         return false;
     }
 
     public boolean removeStudent(Student student) {
-        String hostelName = student.getHostelName();
         for (Hostel hostel : hostelList) {
-            if (hostel.getHostelId().equals(hostelName)) {
-                hostel.vacate(student);
-                return true;
+            if (hostel.getHostelId().equals(student.getHostelId())) {
+                return hostel.vacate(student);
             }
         }
         return false;

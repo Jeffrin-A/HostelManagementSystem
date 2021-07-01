@@ -1,4 +1,6 @@
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class Hostel {
     private final String hostelId;
@@ -9,7 +11,7 @@ public class Hostel {
     private final String wardenPhoneNo;
     private int noOfRooms;
     private int noOfStudents;
-    private final ArrayList<Room> roomList;
+    private final Set<Room> roomList;
 
     public Hostel(String hostelId, String hostelName, String typeOfHostel, int yearOfHostel, String wardenName, String wardenPhoneNo) {
         this.hostelId = hostelId;
@@ -20,7 +22,7 @@ public class Hostel {
         this.wardenPhoneNo = wardenPhoneNo;
         this.noOfRooms = 0;
         this.noOfStudents = 0;
-        roomList = new ArrayList<>();
+        roomList = new HashSet<>();
     }
 
     public String getHostelId() {
@@ -55,11 +57,13 @@ public class Hostel {
         return noOfStudents;
     }
 
-    public void addRoom(Room room) {
-        if (!(roomList.contains(room))) {
-            this.roomList.add(room);
-            this.noOfRooms += 1;
+    public boolean addRoom(Room roomToAdd) {
+        for (Room room : roomList) {
+            if (room.getRoomNumber() == roomToAdd.getRoomNumber())
+                return false;
         }
+        this.noOfRooms += 1;
+        return roomList.add(roomToAdd);
     }
 
     public void addStudent() {
@@ -72,10 +76,9 @@ public class Hostel {
 
     public boolean removeRoom(int roomNo) {
         for (Room room : roomList) {
-            if (room.getRoomNumber() == roomNo) {
-                roomList.remove(room);
-                return true;
-            }
+            if (room.getRoomNumber() == roomNo)
+                this.noOfRooms -= 1;
+            return roomList.remove(room);
         }
         return false;
     }
@@ -83,19 +86,18 @@ public class Hostel {
     public boolean allocate(Student student) {
         for (Room room : roomList) {
             if (room.getStatus() == 0) {
-                room.allocateRoom(student);
-                return true;
+                this.noOfStudents += 1;
+                return room.allocateRoom(student);
             }
         }
         return false;
     }
 
     public boolean vacate(Student student) {
-        int roomNo = student.getRoomNumber();
         for (Room room : roomList) {
-            if (room.getRoomNumber() == roomNo) {
-                room.vacateRoom(student);
-                return true;
+            if (room.getRoomNumber() == student.getRoomNumber()) {
+                this.noOfStudents -= 1;
+                return room.vacateRoom(student);
             }
         }
         return false;
@@ -121,4 +123,8 @@ public class Hostel {
         return this.yearOfHostel == hostel.yearOfHostel && this.noOfRooms == hostel.noOfRooms && this.noOfStudents == hostel.noOfStudents && this.hostelId.equals(hostel.hostelId) && this.hostelName.equals(hostel.hostelName) && this.typeOfHostel.equals(hostel.typeOfHostel) && this.wardenName.equals(hostel.wardenName) && this.wardenPhoneNo.equals(hostel.wardenPhoneNo) && this.roomList.equals(hostel.roomList);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(hostelId);
+    }
 }

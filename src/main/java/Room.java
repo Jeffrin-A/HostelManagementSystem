@@ -1,20 +1,23 @@
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Room {
 
     private String hostelId;
+    private String hostelName;
     private int roomNumber;
     private int noOfBeds;
     private int noOfStudents;
     private int status;
-    private ArrayList<Student> studentList;
+    private Set<Student> studentList;
 
-    public Room(String hostelId, int roomNumber, int noOfBeds) {
+    public Room(String hostelId, String hostelName, int roomNumber, int noOfBeds) {
         this.hostelId = hostelId;
+        this.hostelName = hostelName;
         this.roomNumber = roomNumber;
         this.noOfBeds = noOfBeds;
-        this.studentList = new ArrayList<>();
+        this.studentList = new HashSet<>();
         this.noOfStudents = 0;
         this.status = 0;
     }
@@ -44,11 +47,12 @@ public class Room {
     }
 
     public boolean allocateRoom(Student student) {
-        if (this.getNoOfStudents() < this.getNoOfBeds()) {
-            student.setHostelName(this.hostelId);
+        if (this.noOfStudents < this.noOfBeds) {
+            student.setHostelId(this.hostelId);
+            student.setHostelName(this.hostelName);
             student.setRoomNumber(this.roomNumber);
             this.studentList.add(student);
-            this.setNoOfStudents(this.getNoOfStudents() + 1);
+            this.noOfStudents += 1;
             if (this.noOfStudents == this.noOfBeds)
                 status = 1;
             return true;
@@ -57,12 +61,11 @@ public class Room {
     }
 
     public boolean vacateRoom(Student student) {
-        if (this.studentList.contains(student)) {
-            this.studentList.remove(student);
-            this.setNoOfStudents(this.getNoOfStudents() + 1);
+        if (studentList.remove(student)) {
+            this.noOfStudents -= 1;
             return true;
-        }
-        return false;
+        } else
+            return false;
     }
 
     @Override
@@ -70,7 +73,12 @@ public class Room {
         if (this == objectCompared) return true;
         if (!(objectCompared instanceof Room)) return false;
         Room room = (Room) objectCompared;
-        return this.roomNumber == room.roomNumber && this.noOfBeds == room.noOfBeds && this.noOfStudents == room.noOfStudents && this.status == room.status && this.hostelId.equals(room.hostelId) && this.studentList.equals(room.studentList);
+        return this.roomNumber == room.roomNumber && this.noOfBeds == room.noOfBeds && this.noOfStudents == room.noOfStudents && this.status == room.status && this.hostelId.equals(room.hostelId) && this.hostelName.equals(room.hostelName) && this.studentList.equals(room.studentList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hostelId, roomNumber);
     }
 }
 
